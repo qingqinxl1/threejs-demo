@@ -1,0 +1,128 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>3D男士</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="js/three.js"></script>
+    <script src="js/Detector.js"></script>
+
+    <script src="js/DDSLoader.js"></script>
+    <script src="js/MTLLoader.js"></script>
+    <script src="js/OBJLoader.js"></script>
+    <script>
+        var container;
+        var scene, camera, renderer;
+        var mouseX = 0, mouseY = 0;
+
+        var windowHalfX = window.innerWidth / 2;
+        var windowHalfY = window.innerHeight / 2;
+
+        init();
+        animate();
+
+        function init() {
+            container = document.createElement('div');
+            document.body.appendChild(container);
+
+            // 摄像机
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
+            camera.position.z = 250;
+
+            // 场景
+            scene = new THREE.Scene();
+            var ambientLight = new THREE.AmbientLight(0xcccccc, 0.4);
+            scene.add(ambientLight);
+            
+            var pointLight = new THREE.PointLight(0xffffff, 0.8);
+            scene.add(pointLight);
+
+            scene.add(camera);
+
+            // 3D模型加入
+            var onProgress = function (xhr) {
+                if (xhr.lengthComputable) {
+                    var persentComplete = xhr.loaded / xhr.total * 100;
+                    console.log(Math.round(persentComplete, 2) + '% has been loaded');
+                }
+            }
+            var onError = function (e) {
+                console.log(e);
+            }
+
+            THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader);
+
+            new THREE.MTLLoader()
+                .setPath('models/man/')
+                .load('male02_dds.mtl', function (materials) {
+
+                    materials.preload();
+
+                    new THREE.OBJLoader()
+                        .setMaterials(materials)
+                        .setPath('models/man/')
+                        .load('male02.obj', function (object) {
+
+                            object.position.y = -95;
+                            scene.add(object);
+
+                        }, onProgress, onError);
+                });
+
+            // 渲染
+            renderer = new THREE.WebGLRenderer();
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            // 将渲染后得dom添加到页面
+            container.appendChild(renderer.domElement);
+
+            // 监听事件
+            window.addEventListener('resize', onWindowResize, false);
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+        }
+
+        function onWindowResize() {
+            windowHalfX = window.innerWidth / 2;
+            windowHalfY = window.innerHeight / 2;
+
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectMatrix();
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onDocumentMouseMove(event) {
+            mouseX = (event.clientX - windowHalfX) / 2;
+            mouseY = (event.clientY - windowHalfY) / 2;
+        }
+
+        // 动画
+        function animate() {
+            requestAnimationFrame(animate);
+            render();
+        }
+
+        // 渲染
+        function render() {
+            camera.position.x += (mouseX - camera.position.x) * .05;
+            camera.position.y += (mouseY - camera.position.y) * .05;
+
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,91 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>3d茶壶</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="js/three.js"></script>
+    <script src="js/Detector.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script src="js/TeapotBufferGeometry.js"></script>
+    <script>
+        if (!Detector.webgl) Detector.addGetWebGLMessage();
+
+        var camera, scene, renderer, controls;
+        var light, ambientLight;
+
+        var flatMaterial;
+        var teapot;
+
+        init();
+        animate();
+
+        function init() {
+            var container = document.createElement('div');
+            document.body.appendChild(container);
+
+            var canvasWidth = window.innerWidth;
+            var canvasHeight = window.innerHeight;
+
+            // 创建WebGL渲染器
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(canvasWidth, canvasHeight);
+            renderer.gammaInput = true;
+            renderer.gammaOutput = true;
+
+            container.appendChild(renderer.domElement); // 将渲染器的dom添加到页面中
+
+            // 材质
+            var materialColor = new THREE.Color();
+            materialColor.setRGB(1.0, 1.0, 1.0);
+
+            flatMaterial = new THREE.MeshPhongMaterial({ color: materialColor, specular: 0x000000, flatShading: true, side: THREE.DoubleSide });
+            flatMaterial.color.copy(new THREE.Color().setHSL(0.121, 0.73, 0.66));
+
+            // 创建摄像机
+            camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 8000); //创建透视相机
+            camera.position.set(100, 100, 1000);
+            // 创建摄像机控制
+            controls = new THREE.OrbitControls(camera);
+
+            // 创建灯光
+            light = new THREE.DirectionalLight(0xffffff, 1.0);
+            ambientLight = new THREE.AmbientLight(0x333333, 1.0); // 背景灯光
+
+            // 场景
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xaaaaaa);
+
+            // 创建形状
+            var teapotGeometry = new THREE.TeapotBufferGeometry(400);
+            // 创建3D形状
+            teapot = new THREE.Mesh(teapotGeometry, flatMaterial);
+
+            scene.add(ambientLight); // 将背景灯光加入到场景中
+            scene.add(light); // 将灯光加入到场景中
+            scene.add(teapot); // 将3D形状加入到场景中
+
+            renderer.render(scene, camera); // 以camera的视角将场景渲染到渲染器中,展示在页面中
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            controls.update();
+
+            renderer.render(scene, camera);
+        }
+    </script>
+</body>
+
+</html>
