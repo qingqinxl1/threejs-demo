@@ -4,10 +4,11 @@
     <meta charset="utf-8">
     <title>3D男士</title>
     <style>
-        html,
         body {
-            margin: 0;
-            padding: 0;
+            background-color: #000;
+            color: #fff;
+            margin: 0px;
+            overflow: hidden;
         }
     </style>
 </head>
@@ -40,10 +41,10 @@
 
             // 场景
             scene = new THREE.Scene();
-            var ambientLight = new THREE.AmbientLight(0xcccccc, 0.4);
+            var ambientLight = new THREE.AmbientLight(0xcccccc, 0.8);
             scene.add(ambientLight);
-            
-            var pointLight = new THREE.PointLight(0xffffff, 0.8);
+
+            var pointLight = new THREE.PointLight(0xffffff, 0.4);
             scene.add(pointLight);
 
             scene.add(camera);
@@ -96,7 +97,7 @@
             windowHalfY = window.innerHeight / 2;
 
             camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectMatrix();
+            camera.updateProjectionMatrix();
 
             renderer.setSize(window.innerWidth, window.innerHeight);
         }
