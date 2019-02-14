@@ -36,7 +36,7 @@
             document.body.appendChild(container);
 
             // 摄像机
-            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); // 透视摄像机
             camera.position.z = 250;
 
             // 场景

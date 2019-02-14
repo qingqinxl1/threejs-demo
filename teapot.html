@@ -46,14 +46,14 @@
             container.appendChild(renderer.domElement); // 将渲染器的dom添加到页面中
 
             // 材质
-            var materialColor = new THREE.Color();
-            materialColor.setRGB(1.0, 1.0, 1.0);
+            var materialColor = new THREE.Color(1.0, 1.0, 1.0);
+            // materialColor.setRGB(0, 0, 0);
 
-            flatMaterial = new THREE.MeshPhongMaterial({ color: materialColor, specular: 0x000000, flatShading: true, side: THREE.DoubleSide });
+            flatMaterial = new THREE.MeshPhongMaterial({ color: materialColor, specular: 0x000000, flatShading: false, side: THREE.DoubleSide });
             flatMaterial.color.copy(new THREE.Color().setHSL(0.121, 0.73, 0.66));
 
             // 创建摄像机
-            camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 8000); //创建透视相机
+            camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 2000); //创建透视相机
             camera.position.set(100, 100, 1000);
             // 创建摄像机控制
             controls = new THREE.OrbitControls(camera);
